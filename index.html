@@ -3,54 +3,271 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=Mouse-To_Game/game/index.html" />
-    <script>
-      window.location.replace("Mouse-To_Game/game/index.html");
-    </script>
+    <title>Mouse-To_Game Distribution</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-0: #06131d;
+        --bg-1: #0b2230;
+        --bg-2: #12374b;
+        --card: rgba(8, 25, 37, 0.78);
+        --line: rgba(125, 211, 252, 0.28);
+        --text: #e6f4fa;
+        --muted: #b7d3df;
+        --accent: #38bdf8;
+        --accent-strong: #f59e0b;
+        --ok: #34d399;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 10% 15%,
+            rgba(56, 189, 248, 0.2),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at 90% 0%,
+            rgba(245, 158, 11, 0.16),
+            transparent 30%
+          ),
+          linear-gradient(135deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+        min-height: 100vh;
+      }
+
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 28px 18px 48px;
+      }
+
+      .hero {
+        border: 1px solid var(--line);
+        background: var(--card);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        padding: 28px;
+        animation: rise 0.55s ease-out;
+      }
+
+      .kicker {
+        display: inline-block;
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-size: 0.78rem;
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.7rem, 4.2vw, 3rem);
+        line-height: 1.08;
+      }
+
+      .sub {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 1rem;
+        max-width: 780px;
+      }
+
+      .cta {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .btn {
+        text-decoration: none;
+        color: #031521;
+        background: var(--accent);
+        font-weight: 700;
+        padding: 10px 14px;
+        border-radius: 11px;
+        transition:
+          transform 0.15s ease,
+          filter 0.15s ease;
+      }
+
+      .btn.alt {
+        color: var(--text);
+        background: transparent;
+        border: 1px solid var(--line);
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+      }
+
+      .grid {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 14px;
+        padding: 16px;
+        animation: rise 0.55s ease-out;
+      }
+
+      .card h2 {
+        margin: 0 0 8px;
+        font-size: 1.08rem;
+      }
+
+      .card p,
+      .card li {
+        color: var(--muted);
+      }
+
+      .badge {
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--ok);
+        font-size: 0.8rem;
+      }
+
+      .cmd {
+        margin-top: 8px;
+        background: rgba(1, 12, 18, 0.72);
+        border: 1px solid rgba(56, 189, 248, 0.18);
+        border-radius: 10px;
+        padding: 10px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.86rem;
+        color: #d7eef8;
+        overflow-x: auto;
+      }
+
+      .steps {
+        margin-top: 20px;
+        border-left: 3px solid var(--accent-strong);
+        padding-left: 12px;
+      }
+
+      .steps p {
+        margin: 8px 0;
+        color: var(--muted);
+      }
+
+      .footer {
+        margin-top: 26px;
+        color: #93b4c4;
+        font-size: 0.9rem;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   </head>
   <body>
-    <p>
-      Redirecting to
-      <a href="Mouse-To_Game/game/index.html">Mouse-To_Game/game/index.html</a>
-      ...
-    </p>
-  </body>
-</html>
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mouse Drive 3D</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="hud">
-      <div class="title">MOUSE DRIVE 3D</div>
-      <div>Speed: <span id="speed">0</span> km/h</div>
-      <div>Gear: <span id="gear">N</span></div>
-      <div>RPM: <span id="rpm">900</span></div>
-      <div>Surface: <span id="surface">Road</span></div>
-      <div>Lap: <span id="lap">0</span></div>
-      <div>Lap Time: <span id="lapTime">00:00</span></div>
-      <div>Best: <span id="bestTime">--:--</span></div>
-      <div>Score: <span id="score">0</span></div>
-    </div>
+    <main class="wrap">
+      <section class="hero">
+        <div class="kicker">Distribution Hub</div>
+        <h1>Mouse-To_Game Download and Setup</h1>
+        <p class="sub">
+          This page is the root landing website for distributing the project.
+          Users can play the web demo, download pure executables, or build local
+          binaries for Linux and Windows.
+        </p>
+        <div class="cta">
+          <a class="btn" href="game/index.html">Open Web Demo</a>
+          <a
+            class="btn alt"
+            href="https://github.com/Abdulhadi446/Mouse-To_Game"
+            >GitHub Repository</a
+          >
+          <a
+            class="btn alt"
+            href="https://github.com/Abdulhadi446/Mouse-To_Game/actions/workflows/build-executables.yml"
+            >Download Artifacts</a
+          >
+        </div>
+      </section>
 
-    <div id="controls">
-      <div>Controls</div>
-      <div>Wheel Up: Accelerate</div>
-      <div>Wheel Down: Brake</div>
-      <div>Left Mouse: Turn Left</div>
-      <div>Right Mouse: Turn Right</div>
-      <div>R: Reset</div>
-    </div>
+      <section class="grid">
+        <article class="card">
+          <h2>Windows</h2>
+          <div class="badge">Recommended: Command Prompt build</div>
+          <p>
+            PowerShell blocked? Use the CMD script to generate standalone .exe
+            files.
+          </p>
+          <div class="cmd">build_windows.cmd</div>
+          <p>Outputs:</p>
+          <ul>
+            <li>dist/mouse-to-game.exe</li>
+            <li>dist/input-remapper-runner.exe</li>
+          </ul>
+        </article>
 
-    <canvas id="minimap" width="180" height="180"></canvas>
-    <div id="message"></div>
+        <article class="card">
+          <h2>Linux</h2>
+          <div class="badge">One-file executable build</div>
+          <p>Build native Linux binaries with PyInstaller in one command.</p>
+          <div class="cmd">./build_linux.sh</div>
+          <p>Outputs:</p>
+          <ul>
+            <li>dist/mouse-to-game</li>
+            <li>dist/input-remapper-runner</li>
+          </ul>
+        </article>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="game.js"></script>
+        <article class="card">
+          <h2>Direct Download</h2>
+          <div class="badge">No local build needed</div>
+          <p>
+            Use GitHub Actions artifacts to grab prebuilt Linux and Windows
+            binaries.
+          </p>
+          <div class="cmd">Actions -> Build Executables -> Artifacts</div>
+          <p>Look for:</p>
+          <ul>
+            <li>executables-Linux</li>
+            <li>executables-Windows</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="card steps">
+        <h2>Quick Distribution Steps</h2>
+        <p>1. Push updates to main or create a tag like v1.0.0.</p>
+        <p>2. Run the Build Executables GitHub workflow.</p>
+        <p>3. Share downloaded binaries or upload them to a release.</p>
+        <p>4. Point users to this root page for setup links and demo access.</p>
+      </section>
+
+      <p class="footer">
+        Note: Linux evdev and uinput runtime features may still require device
+        permissions on end-user systems.
+      </p>
+    </main>
   </body>
 </html>

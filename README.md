@@ -58,7 +58,11 @@ Output binaries:
 
 ### Build on Windows
 
-Run in PowerShell:
+Run in Command Prompt (recommended):
+
+build_windows.cmd
+
+Run in PowerShell (alternative):
 
 ./build_windows.ps1
 
