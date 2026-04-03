@@ -504,8 +504,13 @@ const state = {
   damperRate: 3600,
   antiRoll: 9000,
   wheelAngularVel: 0,
-  maxSteerAngle: 0.58,
-  steerSpeedFactor: 0.024,
+  maxSteerAngle: 0.66,
+  steerSpeedFactor: 0.02,
+  steer: 0,
+  steerRiseRate: 7.5,
+  steerFallRate: 10,
+  lowSpeedSteerBoost: 1.2,
+  highSpeedSteerScale: 0.52,
   cornerStiffFrontRoad: 8.4,
   cornerStiffRearRoad: 9.0,
   cornerStiffFrontOffroad: 3.2,
@@ -564,6 +569,7 @@ function resetPlayer() {
   state.vz = 0;
   state.yawVel = 0;
   state.wheelAngularVel = 0;
+  state.steer = 0;
   input.throttle = 0;
   input.wheelCounter = 0;
   input.forwardLatched = false;
@@ -757,6 +763,12 @@ function updatePlayer(dt) {
         : 0;
   input.throttle += (targetThrottle - input.throttle) * Math.min(1, dt * 8);
 
+  const steerRate =
+    Math.abs(steerInput) > Math.abs(state.steer)
+      ? state.steerRiseRate
+      : state.steerFallRate;
+  state.steer += (steerInput - state.steer) * Math.min(1, dt * steerRate);
+
   const fx = Math.sin(state.yaw);
   const fz = Math.cos(state.yaw);
   const rx = Math.sin(state.yaw + Math.PI / 2);
@@ -765,9 +777,20 @@ function updatePlayer(dt) {
   const vxLocal = state.vx * fx + state.vz * fz;
   const vyLocal = state.vx * rx + state.vz * rz;
   const speedAbs = Math.abs(vxLocal);
+  const speedRatio = THREE.MathUtils.clamp(
+    speedAbs / state.maxForwardSpeed,
+    0,
+    1,
+  );
+  const steerSpeedScale = THREE.MathUtils.lerp(
+    state.lowSpeedSteerBoost,
+    state.highSpeedSteerScale,
+    speedRatio,
+  );
 
   const steerAngle =
-    steerInput *
+    state.steer *
+    steerSpeedScale *
     (state.maxSteerAngle / (1 + speedAbs * state.steerSpeedFactor));
 
   const surfaceType = getSurfaceType(state.x, state.z);
@@ -848,7 +871,8 @@ function updatePlayer(dt) {
     state.rearAxleToCG * latForceRear;
   const yawAccel = yawMoment / state.inertia;
   state.yawVel += yawAccel * dt;
-  state.yawVel *= Math.max(0.86, 1 - 2.1 * dt);
+  const yawDampingBase = THREE.MathUtils.lerp(1.7, 3.2, speedRatio);
+  state.yawVel *= Math.max(0.83, 1 - yawDampingBase * dt);
   state.yaw += state.yawVel * dt;
 
   state.vx = fx * nextVxLocal + rx * nextVyLocal;

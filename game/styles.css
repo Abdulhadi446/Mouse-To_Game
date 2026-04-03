@@ -1,3 +1,17 @@
+:root {
+  --panel-bg: linear-gradient(
+    145deg,
+    rgba(13, 24, 35, 0.8),
+    rgba(7, 14, 19, 0.78)
+  );
+  --panel-border: rgba(137, 212, 114, 0.62);
+  --panel-text: #e7f8dc;
+  --panel-title: #f4ffd7;
+  --accent: #97ea78;
+  --accent-soft: rgba(151, 234, 120, 0.28);
+  --shadow: 0 10px 34px rgba(0, 0, 0, 0.42);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -8,13 +22,19 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: radial-gradient(
-    circle at 20% 20%,
-    #2f3b1f 0%,
-    #161c12 65%,
-    #0b0e0a 100%
-  );
-  font-family: "Trebuchet MS", Verdana, sans-serif;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(96, 157, 75, 0.22),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 85%,
+      rgba(81, 130, 212, 0.18),
+      transparent 40%
+    ),
+    radial-gradient(circle at 30% 30%, #2f3b1f 0%, #161c12 65%, #0b0e0a 100%);
+  font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
 }
 
 canvas {
@@ -25,40 +45,49 @@ canvas {
 #controls {
   position: absolute;
   z-index: 20;
-  color: #dbffd3;
-  background: rgba(10, 25, 11, 0.7);
-  border: 1px solid #89d472;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  color: var(--panel-text);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
   text-shadow: 0 1px 0 #000;
+  backdrop-filter: blur(5px);
 }
 
 #hud {
   top: 16px;
   left: 16px;
-  min-width: 260px;
-  padding: 12px;
-  line-height: 1.5;
+  min-width: 280px;
+  padding: 12px 14px;
+  line-height: 1.55;
 }
 
 #hud .title {
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
+  color: var(--panel-title);
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  margin-bottom: 8px;
+}
+
+#hud span {
+  color: #ffffff;
+  font-weight: 600;
 }
 
 #controls {
   left: 16px;
   bottom: 16px;
-  padding: 12px;
+  padding: 12px 14px;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.5;
+  max-width: min(360px, calc(100vw - 32px));
 }
 
 .controls-title {
-  font-weight: bold;
-  letter-spacing: 0.6px;
-  margin-bottom: 4px;
+  color: var(--panel-title);
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  margin-bottom: 6px;
 }
 
 #tryTool {
@@ -66,33 +95,35 @@ canvas {
   right: 16px;
   bottom: 16px;
   z-index: 20;
-  width: min(430px, calc(100vw - 32px));
-  color: #ecffd8;
+  width: min(440px, calc(100vw - 32px));
+  color: var(--panel-text);
   background: linear-gradient(
-    135deg,
-    rgba(16, 39, 18, 0.88),
-    rgba(9, 20, 10, 0.82)
+    145deg,
+    rgba(20, 32, 21, 0.88),
+    rgba(8, 18, 12, 0.84)
   );
-  border: 1px solid #9de788;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 12px 14px;
   font-size: 13px;
-  line-height: 1.35;
+  line-height: 1.42;
+  backdrop-filter: blur(5px);
 }
 
 #tryTool .cta-title {
-  font-weight: 700;
-  letter-spacing: 0.7px;
-  margin-bottom: 4px;
+  color: var(--panel-title);
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  margin-bottom: 5px;
 }
 
 #tryTool .cmd {
-  margin-top: 6px;
-  background: rgba(0, 0, 0, 0.34);
-  border: 1px solid rgba(157, 231, 136, 0.55);
-  border-radius: 6px;
-  padding: 6px 8px;
+  margin-top: 8px;
+  background: rgba(2, 5, 8, 0.46);
+  border: 1px solid var(--accent-soft);
+  border-radius: 7px;
+  padding: 7px 9px;
   font-family: "DejaVu Sans Mono", Consolas, monospace;
   color: #f4ffd7;
 }
@@ -101,10 +132,11 @@ canvas {
   position: absolute;
   top: 16px;
   right: 16px;
-  border: 1px solid #89d472;
-  border-radius: 10px;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
   background: rgba(8, 16, 8, 0.78);
   z-index: 20;
+  box-shadow: var(--shadow);
 }
 
 #message {
@@ -114,9 +146,9 @@ canvas {
   transform: translate(-50%, -50%);
   z-index: 30;
   color: #fff3aa;
-  font-size: 42px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  letter-spacing: 1.6px;
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
   pointer-events: none;
 }
