@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mouse Drive 3D</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="hud">
+      <div class="title">MOUSE DRIVE 3D</div>
+      <div>Mapper: <span id="mapperState">ENABLED</span></div>
+      <div>Wheel Counter: <span id="wheelCounter">0.00</span></div>
+      <div>Wheel Action: <span id="wheelAction">IDLE</span></div>
+      <div>Speed: <span id="speed">0</span> km/h</div>
+      <div>Gear: <span id="gear">N</span></div>
+      <div>RPM: <span id="rpm">900</span></div>
+      <div>Surface: <span id="surface">Road</span></div>
+      <div>Lap: <span id="lap">0</span></div>
+      <div>Lap Time: <span id="lapTime">00:00</span></div>
+      <div>Best: <span id="bestTime">--:--</span></div>
+      <div>Score: <span id="score">0</span></div>
+    </div>
+
+    <div id="controls">
+      <div class="controls-title">Tool-style Controls</div>
+      <div>Wheel Up/Down: Charge Forward/Backward</div>
+      <div>Left Mouse Hold: Turn Left</div>
+      <div>Right Mouse Hold: Turn Right</div>
+      <div>Middle Mouse: Emergency Stop</div>
+      <div>F8: Enable/Disable Mapper</div>
+      <div>R: Reset Car</div>
+    </div>
+
+    <div id="tryTool">
+      <div class="cta-title">Try It Here, Then Install Desktop Tool</div>
+      <div>
+        This web demo mirrors the mouse mapper behavior. If it feels good, run:
+      </div>
+      <div class="cmd">python3 mouse_to_wasd.py</div>
+    </div>
+
+    <canvas id="minimap" width="180" height="180"></canvas>
+    <div id="message"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>

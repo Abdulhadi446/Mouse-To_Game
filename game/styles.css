@@ -1,0 +1,138 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 20% 20%,
+    #2f3b1f 0%,
+    #161c12 65%,
+    #0b0e0a 100%
+  );
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+#hud,
+#controls {
+  position: absolute;
+  z-index: 20;
+  color: #dbffd3;
+  background: rgba(10, 25, 11, 0.7);
+  border: 1px solid #89d472;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 0 #000;
+}
+
+#hud {
+  top: 16px;
+  left: 16px;
+  min-width: 260px;
+  padding: 12px;
+  line-height: 1.5;
+}
+
+#hud .title {
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+#controls {
+  left: 16px;
+  bottom: 16px;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.controls-title {
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+}
+
+#tryTool {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  width: min(430px, calc(100vw - 32px));
+  color: #ecffd8;
+  background: linear-gradient(
+    135deg,
+    rgba(16, 39, 18, 0.88),
+    rgba(9, 20, 10, 0.82)
+  );
+  border: 1px solid #9de788;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+#tryTool .cta-title {
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  margin-bottom: 4px;
+}
+
+#tryTool .cmd {
+  margin-top: 6px;
+  background: rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(157, 231, 136, 0.55);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: "DejaVu Sans Mono", Consolas, monospace;
+  color: #f4ffd7;
+}
+
+#minimap {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: 1px solid #89d472;
+  border-radius: 10px;
+  background: rgba(8, 16, 8, 0.78);
+  z-index: 20;
+}
+
+#message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  color: #fff3aa;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  #hud {
+    min-width: 220px;
+    font-size: 13px;
+  }
+
+  #controls,
+  #tryTool {
+    font-size: 12px;
+  }
+
+  #tryTool {
+    max-width: 320px;
+  }
+}
