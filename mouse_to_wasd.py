@@ -897,33 +897,46 @@ class LogWindow:
         self.settings_visible = False
         self.root = tk.Tk()
         self.root.title(title)
-        self.root.geometry("860x620")
-        self.root.minsize(740, 520)
+        self.root.geometry("920x680")
+        self.root.minsize(800, 580)
+
+        # Set modern color scheme
+        self.BG_DARK = "#0f172a"
+        self.BG_LIGHTER = "#1e293b"
+        self.BG_PANEL = "#1e3a8a"
+        self.FG_TEXT = "#f1f5f9"
+        self.FG_ACCENT = "#60a5fa"
+        self.FG_SUCCESS = "#34d399"
+        self.FG_WARNING = "#fbbf24"
+        self.FG_ERROR = "#f87171"
+        self.BORDER_COLOR = "#334155"
+
+        self.root.configure(bg=self.BG_DARK)
 
         self.counter_overlay = tk.Toplevel(self.root)
         self.counter_overlay.overrideredirect(True)
         self.counter_overlay.attributes("-topmost", True)
-        self.counter_overlay.configure(bg="#0b1220")
-        self.counter_overlay.attributes("-alpha", 0.62)
+        self.counter_overlay.configure(bg=self.BG_PANEL)
+        self.counter_overlay.attributes("-alpha", 0.85)
 
         screen_w = self.root.winfo_screenwidth()
-        overlay_w = 150
-        overlay_h = 32
+        overlay_w = 180
+        overlay_h = 40
         overlay_x = screen_w - overlay_w
         overlay_y = 0
         self.counter_overlay.geometry(
             f"{overlay_w}x{overlay_h}+{overlay_x}+{overlay_y}"
         )
 
-        self.overlay_counter_var = tk.StringVar(value="counter 0.00")
+        self.overlay_counter_var = tk.StringVar(value="⚙ Counter: 0.00")
         overlay_label = tk.Label(
             self.counter_overlay,
             textvariable=self.overlay_counter_var,
-            bg="#0b1220",
-            fg="#e2e8f0",
-            font=("DejaVu Sans", 11, "bold"),
-            padx=4,
-            pady=2,
+            bg=self.BG_PANEL,
+            fg=self.FG_ACCENT,
+            font=("Monaco", 12, "bold"),
+            padx=6,
+            pady=4,
         )
         overlay_label.pack(fill="both", expand=True)
 
@@ -932,7 +945,7 @@ class LogWindow:
         self.status_vars = {
             "backend": tk.StringVar(value="backend: ?"),
             "session": tk.StringVar(value="session: ?"),
-            "enabled": tk.StringVar(value="enabled: yes"),
+            "enabled": tk.StringVar(value="enabled: ✓ yes"),
             "device": tk.StringVar(value="device: ?"),
             "last": tk.StringVar(value="last event: none"),
             "counter": tk.StringVar(value="counter: 0.00"),
@@ -974,35 +987,108 @@ class LogWindow:
         self.root.after(50, self._drain)
 
     def _build_ui(self) -> None:
-        container = ttk.Frame(self.root, padding=12)
+        # Configure ttk style for better appearance
+        style = ttk.Style()
+        style.theme_use("clam")
+        style.configure(
+            "Title.TLabel",
+            font=("Monaco", 14, "bold"),
+            foreground=self.FG_ACCENT,
+            background=self.BG_DARK,
+        )
+        style.configure(
+            "Header.TLabel",
+            font=("Monaco", 11, "bold"),
+            foreground=self.FG_TEXT,
+            background=self.BG_DARK,
+        )
+        style.configure(
+            "Status.TLabel",
+            font=("Monaco", 10),
+            foreground=self.FG_TEXT,
+            background=self.BG_DARK,
+        )
+        style.configure("TLabel", background=self.BG_DARK, foreground=self.FG_TEXT)
+        style.configure(
+            "TButton",
+            font=("Monaco", 10),
+            padding=4,
+        )
+        style.map(
+            "TButton",
+            background=[("active", self.BG_PANEL)],
+            foreground=[("active", self.FG_ACCENT)],
+        )
+        style.configure(
+            "TLabelframe",
+            background=self.BG_DARK,
+            foreground=self.FG_ACCENT,
+            font=("Monaco", 10, "bold"),
+        )
+        style.configure(
+            "TLabelframe.Label", background=self.BG_DARK, foreground=self.FG_ACCENT
+        )
+        style.configure("TFrame", background=self.BG_DARK)
+        style.configure(
+            "TCombobox",
+            font=("Monaco", 10),
+            fieldbackground=self.BG_LIGHTER,
+            foreground=self.FG_TEXT,
+        )
+
+        # Main container
+        container = ttk.Frame(self.root, padding=14)
         container.pack(fill="both", expand=True)
 
+        # Header section with title
+        header = ttk.Frame(container)
+        header.pack(fill="x", pady=(0, 12))
+
+        title_label = ttk.Label(
+            header, text="🖱️ Mouse To WASD Controller", style="Title.TLabel"
+        )
+        title_label.pack(anchor="w", pady=(0, 8))
+
+        # Status indicators with better layout
         top = ttk.Frame(container)
-        top.pack(fill="x", pady=(0, 10))
+        top.pack(fill="x", pady=(0, 12), padx=8)
 
-        for key in ("backend", "session", "enabled", "device", "last"):
-            ttk.Label(top, textvariable=self.status_vars[key]).pack(anchor="w")
+        for key in ("backend", "session", "enabled", "device"):
+            status_label = ttk.Label(
+                top, textvariable=self.status_vars[key], style="Status.TLabel"
+            )
+            status_label.pack(anchor="w", pady=2)
 
-        self.settings_frame = ttk.LabelFrame(container, text="Key Settings", padding=8)
+        last_label = ttk.Label(
+            top, textvariable=self.status_vars["last"], style="Status.TLabel"
+        )
+        last_label.pack(anchor="w", pady=2)
+
+        # Settings section
+        self.settings_frame = ttk.LabelFrame(
+            container, text="⚙️ Key Remapping", padding=10
+        )
         self.settings_frame.pack_forget()
 
         key_labels = [
-            ("Forward (W)", "forward"),
-            ("Backward (S)", "backward"),
-            ("Left (A)", "left"),
-            ("Right (D)", "right"),
-            ("Jump (Space)", "jump"),
+            ("Forward", "forward", "W"),
+            ("Backward", "backward", "S"),
+            ("Left", "left", "A"),
+            ("Right", "right", "D"),
+            ("Jump", "jump", "Space"),
         ]
 
-        for label_text, key_type in key_labels:
+        for label_text, key_type, default in key_labels:
             frame = ttk.Frame(self.settings_frame)
-            frame.pack(fill="x", pady=2)
-            ttk.Label(frame, text=label_text, width=15).pack(side="left")
+            frame.pack(fill="x", pady=4)
+            ttk.Label(frame, text=label_text, width=12, style="Header.TLabel").pack(
+                side="left", padx=(0, 8)
+            )
             entry = ttk.Combobox(
                 frame,
                 textvariable=self.key_input_vars[key_type],
                 values=self.key_choices,
-                width=12,
+                width=14,
                 state="readonly",
             )
             entry.pack(side="left", padx=4)
@@ -1013,48 +1099,78 @@ class LogWindow:
             ttk.Button(
                 frame,
                 text="Apply",
-                width=6,
+                width=8,
                 command=lambda kt=key_type: self._apply_key_setting(kt),
-            ).pack(side="left")
+            ).pack(side="left", padx=4)
 
+        # Counter section
         bars = ttk.Frame(container)
-        bars.pack(fill="x", pady=(0, 8))
+        bars.pack(fill="x", pady=(0, 10), padx=8)
 
-        ttk.Label(bars, text="Scroll Counter Magnitude").pack(anchor="w")
+        ttk.Label(bars, text="📊 Scroll Counter Magnitude", style="Header.TLabel").pack(
+            anchor="w", pady=(0, 4)
+        )
         self.counter_bar = ttk.Progressbar(
-            bars, orient="horizontal", mode="determinate", maximum=1.0
+            bars, orient="horizontal", mode="determinate", maximum=1.0, length=300
         )
         self.counter_bar.pack(fill="x")
-        ttk.Label(bars, textvariable=self.status_vars["counter"]).pack(anchor="w")
+        ttk.Label(
+            bars, textvariable=self.status_vars["counter"], style="Status.TLabel"
+        ).pack(anchor="w", pady=(2, 0))
+
+        # Text log area
+        log_frame = ttk.Frame(container)
+        log_frame.pack(fill="both", expand=True, pady=(8, 0))
+
+        ttk.Label(log_frame, text="📝 Activity Log", style="Header.TLabel").pack(
+            anchor="w", pady=(0, 4)
+        )
 
         self.text = tk.Text(
-            container, wrap="word", height=22, bg="#0f172a", fg="#e2e8f0"
+            log_frame,
+            wrap="word",
+            height=16,
+            bg=self.BG_LIGHTER,
+            fg=self.FG_TEXT,
+            font=("Monaco", 9),
+            insertbackground=self.FG_ACCENT,
+            relief="flat",
+            borderwidth=1,
         )
         self.text.pack(fill="both", expand=True, side="left")
         self.text.configure(state="disabled", takefocus=0)
         for sequence in ("<Button-2>", "<ButtonRelease-2>", "<<Paste>>"):
             self.text.bind(sequence, lambda _event: "break")
 
-        scroll = ttk.Scrollbar(container, command=self.text.yview)
+        scroll = ttk.Scrollbar(log_frame, command=self.text.yview)
         scroll.pack(fill="y", side="right")
         self.text.configure(yscrollcommand=scroll.set)
 
+        # Bottom buttons
         bottom = ttk.Frame(container)
-        bottom.pack(fill="x", pady=(10, 0))
-        ttk.Button(bottom, text="Clear", command=self.clear).pack(side="left")
-        ttk.Button(bottom, text="Settings", command=self._toggle_settings).pack(
-            side="left", padx=4
+        bottom.pack(fill="x", pady=(12, 0))
+
+        ttk.Button(bottom, text="🗑️ Clear Log", command=self.clear).pack(
+            side="left", padx=2
         )
-        ttk.Button(bottom, text="Quit", command=self.root.quit).pack(side="right")
+        ttk.Button(bottom, text="⚙️ Settings", command=self._toggle_settings).pack(
+            side="left", padx=2
+        )
+        ttk.Button(bottom, text="❌ Quit (ESC)", command=self._quit_app).pack(
+            side="right", padx=2
+        )
 
         def close_windows() -> None:
             try:
                 self.counter_overlay.destroy()
             except Exception:
                 pass
-            self.root.quit()
+            self._quit_app()
 
         self.root.protocol("WM_DELETE_WINDOW", close_windows)
+
+        # ESC key binding to quit
+        self.root.bind("<Escape>", lambda e: self._quit_app())
 
     def log(self, message: str) -> None:
         self.queue.put(message)
@@ -1063,7 +1179,8 @@ class LogWindow:
         self.status_queue.put((key, value))
 
     def set_enabled(self, enabled: bool) -> None:
-        self.set_status("enabled", f"enabled: {'yes' if enabled else 'no'}")
+        status = f"enabled: {'✓ yes' if enabled else '✗ no'}"
+        self.set_status("enabled", status)
 
     def set_last(self, value: str) -> None:
         self.set_status("last", f"last event: {value}")
@@ -1076,6 +1193,16 @@ class LogWindow:
             )
         else:
             self.settings_frame.pack_forget()
+
+    def _quit_app(self) -> None:
+        """Quit the application cleanly."""
+        if self.mapper:
+            self.mapper.stop("GUI_QUIT")
+        try:
+            self.counter_overlay.destroy()
+        except Exception:
+            pass
+        self.root.quit()
 
     def _apply_key_setting(self, key_type: str) -> None:
         if not self.mapper:
@@ -1134,7 +1261,7 @@ class LogWindow:
                     try:
                         counter_value = float(value.split(":", 1)[1].strip())
                         self.counter_bar["value"] = abs(counter_value)
-                        self.overlay_counter_var.set(f"counter {counter_value:+.2f}")
+                        self.overlay_counter_var.set(f"⚙ Counter: {counter_value:+.2f}")
                     except Exception:
                         pass
         except queue.Empty:
