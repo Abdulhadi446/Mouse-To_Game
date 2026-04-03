@@ -73,14 +73,17 @@ Output binaries:
 
 ### Auto-build from GitHub Actions
 
-The workflow at .github/workflows/build-executables.yml builds Linux and Windows executables and uploads them as artifacts.
+The workflow at .github/workflows/build-executables.yml builds Linux and Windows executables.
+
+- On tag push (v\*), it creates a GitHub Release and uploads binaries directly to Releases.
+- On manual run, it still uploads temporary workflow artifacts.
 
 How to use:
 
 1. Push code to GitHub.
 2. Open Actions -> Build Executables.
-3. Run workflow (or push a tag like v1.0.0).
-4. Download artifacts named executables-Linux and executables-Windows.
+3. Push a tag like v1.0.0 to publish binaries in Releases.
+4. Or run workflow manually and download artifacts named executables-Linux and executables-Windows.
 
 Important:
 
