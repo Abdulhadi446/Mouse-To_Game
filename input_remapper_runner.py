@@ -78,16 +78,26 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Run Input Remapper preset and stop on ESC"
     )
-    parser.add_argument(
-        "--device", required=True, help="Device key as used by Input Remapper"
-    )
-    parser.add_argument("--preset", required=True, help="Preset name without .json")
+    parser.add_argument("--device", help="Device key as used by Input Remapper")
+    parser.add_argument("--preset", help="Preset name without .json")
     parser.add_argument(
         "--allow-touchpad",
         action="store_true",
         help="Override safety check and allow touchpad-like device names",
     )
     args = parser.parse_args()
+
+    if not args.device:
+        if sys.stdin.isatty():
+            args.device = input("[remapper] Device key: ").strip()
+        if not args.device:
+            raise SystemExit("[remapper] Missing --device")
+
+    if not args.preset:
+        if sys.stdin.isatty():
+            args.preset = input("[remapper] Preset name: ").strip()
+        if not args.preset:
+            raise SystemExit("[remapper] Missing --preset")
 
     if looks_like_touchpad(args.device) and not args.allow_touchpad:
         raise SystemExit(

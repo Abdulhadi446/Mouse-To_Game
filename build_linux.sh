@@ -11,6 +11,9 @@ python3 -m PyInstaller \
   --clean \
   --onefile \
   --windowed \
+  --collect-all pynput \
+  --collect-all Xlib \
+  --collect-all evdev \
   --name mouse-to-game \
   mouse_to_wasd.py
 
@@ -18,6 +21,9 @@ python3 -m PyInstaller \
   --noconfirm \
   --clean \
   --onefile \
+  --collect-all pynput \
+  --collect-all Xlib \
+  --collect-all evdev \
   --name input-remapper-runner \
   input_remapper_runner.py
 

@@ -35,22 +35,22 @@ jobs:
       - name: Build mouse-to-game (Linux)
         if: runner.os == 'Linux'
         run: |
-          python -m PyInstaller --noconfirm --clean --onefile --windowed --name mouse-to-game mouse_to_wasd.py
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --collect-all pynput --collect-all Xlib --collect-all evdev --name mouse-to-game mouse_to_wasd.py
 
       - name: Build input-remapper-runner (Linux)
         if: runner.os == 'Linux'
         run: |
-          python -m PyInstaller --noconfirm --clean --onefile --name input-remapper-runner input_remapper_runner.py
+          python -m PyInstaller --noconfirm --clean --onefile --collect-all pynput --collect-all Xlib --collect-all evdev --name input-remapper-runner input_remapper_runner.py
 
       - name: Build mouse-to-game (Windows)
         if: runner.os == 'Windows'
         run: |
-          python -m PyInstaller --noconfirm --clean --onefile --windowed --name mouse-to-game mouse_to_wasd.py
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --collect-all pynput --name mouse-to-game mouse_to_wasd.py
 
       - name: Build input-remapper-runner (Windows)
         if: runner.os == 'Windows'
         run: |
-          python -m PyInstaller --noconfirm --clean --onefile --name input-remapper-runner input_remapper_runner.py
+          python -m PyInstaller --noconfirm --clean --onefile --collect-all pynput --name input-remapper-runner input_remapper_runner.py
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

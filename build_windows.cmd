@@ -8,11 +8,11 @@ py -3 -m pip install -r requirements.txt -r requirements-build.txt
 if errorlevel 1 goto :error
 
 echo [2/3] Building mouse-to-game.exe...
-py -3 -m PyInstaller --noconfirm --clean --onefile --windowed --name mouse-to-game.exe mouse_to_wasd.py
+py -3 -m PyInstaller --noconfirm --clean --onefile --windowed --collect-all pynput --name mouse-to-game.exe mouse_to_wasd.py
 if errorlevel 1 goto :error
 
 echo [3/3] Building input-remapper-runner.exe...
-py -3 -m PyInstaller --noconfirm --clean --onefile --name input-remapper-runner.exe input_remapper_runner.py
+py -3 -m PyInstaller --noconfirm --clean --onefile --collect-all pynput --name input-remapper-runner.exe input_remapper_runner.py
 if errorlevel 1 goto :error
 
 echo.
