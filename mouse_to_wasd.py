@@ -29,12 +29,22 @@ import queue
 import select
 import signal
 import sys
-import termios
 import threading
 import time
-import tty
 from dataclasses import dataclass
 from typing import Iterable, Optional
+
+try:
+    import termios
+    import tty
+except ImportError:  # pragma: no cover - Windows
+    termios = None
+    tty = None
+
+try:
+    import msvcrt
+except ImportError:  # pragma: no cover - non-Windows
+    msvcrt = None
 
 try:
     import tkinter as tk
@@ -911,6 +921,19 @@ def terminal_esc_watcher(mapper: MouseToWasd) -> None:
     This works even when GNOME Wayland blocks global keyboard listeners.
     """
     if not sys.stdin.isatty():
+        return
+
+    if msvcrt is not None:
+        while mapper.running:
+            if msvcrt.kbhit():
+                key = msvcrt.getch()
+                if key == b"\x1b":
+                    mapper.stop("TERMINAL_ESC")
+                    return
+            time.sleep(0.05)
+        return
+
+    if termios is None or tty is None:
         return
 
     fd = sys.stdin.fileno()

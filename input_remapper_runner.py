@@ -11,8 +11,18 @@ import argparse
 import select
 import subprocess
 import sys
-import termios
-import tty
+
+try:
+    import termios
+    import tty
+except ImportError:  # pragma: no cover - Windows
+    termios = None
+    tty = None
+
+try:
+    import msvcrt
+except ImportError:  # pragma: no cover - non-Windows
+    msvcrt = None
 
 
 def looks_like_touchpad(name: str) -> bool:
@@ -72,6 +82,17 @@ def esc_wait_loop() -> None:
                 select.select([], [], [], 1.0)
         except KeyboardInterrupt:
             return
+
+    if msvcrt is not None:
+        while True:
+            if msvcrt.kbhit():
+                if msvcrt.getch() == b"\x1b":
+                    return
+            select.select([], [], [], 0.05)
+        return
+
+    if termios is None or tty is None:
+        return
 
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
