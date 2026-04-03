@@ -39,6 +39,20 @@ def run_control(args: list[str]) -> subprocess.CompletedProcess[str]:
     )
 
 
+def list_device_keys() -> list[str]:
+    result = run_control(["--list-devices"])
+    if result.returncode != 0:
+        return []
+
+    keys = []
+    for line in result.stdout.splitlines():
+        entry = line.strip()
+        if not entry:
+            continue
+        keys.append(entry)
+    return keys
+
+
 def start_preset(device: str, preset: str) -> None:
     result = run_control(["--command", "start", "--device", device, "--preset", preset])
     if result.returncode != 0:
@@ -88,10 +102,26 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.device:
+        devices = list_device_keys()
+        if devices and sys.stdin.isatty():
+            print("[remapper] Available device keys:")
+            for index, device in enumerate(devices, start=1):
+                print(f"  {index}. {device}")
+            choice = input("[remapper] Pick a device number or type a key: ").strip()
+            if choice.isdigit():
+                selection = int(choice)
+                if 1 <= selection <= len(devices):
+                    args.device = devices[selection - 1]
+            elif choice:
+                args.device = choice
+
         if sys.stdin.isatty():
-            args.device = input("[remapper] Device key: ").strip()
+            if not args.device:
+                args.device = input("[remapper] Device key: ").strip()
         if not args.device:
-            raise SystemExit("[remapper] Missing --device")
+            raise SystemExit(
+                "[remapper] Missing --device. Run `input-remapper-control --list-devices` to see available keys."
+            )
 
     if not args.preset:
         if sys.stdin.isatty():

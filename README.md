@@ -189,6 +189,10 @@ You can control an existing Input Remapper preset without opening GTK:
 
 python3 input_remapper_runner.py --device "BT5.4 Mouse" --preset "The Gaming Setup"
 
+To see valid device keys on your machine, run:
+
+input-remapper-control --list-devices
+
 Behavior:
 
 - Starts the selected Input Remapper preset
