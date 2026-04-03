@@ -38,6 +38,51 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000/game/
 
+## Pure executables (no Python install for end users)
+
+You can ship standalone binaries for both tools:
+
+- mouse-to-game (from mouse_to_wasd.py)
+- input-remapper-runner (from input_remapper_runner.py)
+
+### Build on Linux
+
+Run:
+
+./build_linux.sh
+
+Output binaries:
+
+- dist/mouse-to-game
+- dist/input-remapper-runner
+
+### Build on Windows
+
+Run in PowerShell:
+
+./build_windows.ps1
+
+Output binaries:
+
+- dist/mouse-to-game.exe
+- dist/input-remapper-runner.exe
+
+### Auto-build from GitHub Actions
+
+The workflow at .github/workflows/build-executables.yml builds Linux and Windows executables and uploads them as artifacts.
+
+How to use:
+
+1. Push code to GitHub.
+2. Open Actions -> Build Executables.
+3. Run workflow (or push a tag like v1.0.0).
+4. Download artifacts named executables-Linux and executables-Windows.
+
+Important:
+
+- Linux raw input features still require system permissions for /dev/input and /dev/uinput at runtime.
+- A Windows .exe must be built on Windows (the workflow handles this automatically).
+
 ## Global Mouse-to-WASD App (works across games)
 
 If you want mouse controls converted to WASD globally (outside this web game), use the helper app:
