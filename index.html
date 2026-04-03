@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=/game/index.html" />
+    <script>
+      window.location.replace("/game/index.html");
+    </script>
+  </head>
+  <body>
+    <p>
+      Redirecting to
+      <a href="/game/index.html">/game/index.html</a>
+      ...
+    </p>
+  </body>
+</html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mouse Drive 3D</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="hud">
+      <div class="title">MOUSE DRIVE 3D</div>
+      <div>Speed: <span id="speed">0</span> km/h</div>
+      <div>Gear: <span id="gear">N</span></div>
+      <div>RPM: <span id="rpm">900</span></div>
+      <div>Surface: <span id="surface">Road</span></div>
+      <div>Lap: <span id="lap">0</span></div>
+      <div>Lap Time: <span id="lapTime">00:00</span></div>
+      <div>Best: <span id="bestTime">--:--</span></div>
+      <div>Score: <span id="score">0</span></div>
+    </div>
+
+    <div id="controls">
+      <div>Controls</div>
+      <div>Wheel Up: Accelerate</div>
+      <div>Wheel Down: Brake</div>
+      <div>Left Mouse: Turn Left</div>
+      <div>Right Mouse: Turn Right</div>
+      <div>R: Reset</div>
+    </div>
+
+    <canvas id="minimap" width="180" height="180"></canvas>
+    <div id="message"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
