@@ -45,11 +45,11 @@ except ImportError:  # pragma: no cover - optional GUI
 
 try:
     from evdev import InputDevice, UInput, ecodes, list_devices
-except ImportError as exc:  # pragma: no cover - import-time failure is user-facing
-    raise SystemExit(
-        "[mouse2wasd] Missing dependency: evdev. Install with:\n"
-        "  python3 -m pip install -r requirements.txt"
-    ) from exc
+except ImportError:  # pragma: no cover - optional backend
+    InputDevice = None
+    UInput = None
+    ecodes = None
+    list_devices = None
 
 try:
     from pynput import keyboard as pynput_keyboard
@@ -97,6 +97,7 @@ class MouseToWasd:
         self.ui: Optional[UInput] = None
         self.display = None
         self.x11_kbd = None
+        self.pynput_kbd = None
         self.backend = "evdev"
         self.mouse_listener = None
         self.key_listener = None
@@ -475,6 +476,11 @@ class MouseToWasd:
         if pynput_keyboard is None or pynput_mouse is None:
             return False
 
+        try:
+            self.pynput_kbd = pynput_keyboard.Controller()
+        except Exception:
+            return False
+
         self.mouse_listener = pynput_mouse.Listener(
             on_scroll=self._pynput_on_scroll,
             on_click=self._pynput_on_click,
@@ -534,6 +540,8 @@ class MouseToWasd:
         return True
 
     def _setup_uinput(self) -> None:
+        if UInput is None or ecodes is None:
+            raise RuntimeError("evdev backend is unavailable on this platform")
         capabilities = {ecodes.EV_KEY: self._uinput_supported_key_codes()}
         self.ui = UInput(capabilities, name="mouse2wasd-virtual-keyboard")
 
@@ -616,6 +624,22 @@ class MouseToWasd:
                 )
                 return
 
+        if self.backend == "pynput" and self.pynput_kbd is not None:
+            key_value = self._controller_key_value(normalized_key)
+            if key_value is not None:
+                self._debug(
+                    f"emit {key_name} {'down' if value else 'up'} via pynput-controller"
+                )
+                if value:
+                    self.pynput_kbd.press(key_value)
+                else:
+                    self.pynput_kbd.release(key_value)
+                self._status(
+                    "last",
+                    f"emit {key_name} {'down' if value else 'up'} via pynput-controller",
+                )
+                return
+
         if (
             self.backend == "x11"
             and self.display is not None
@@ -642,12 +666,18 @@ class MouseToWasd:
 
     def _press(self, key: str) -> None:
         if not self.held[key]:
-            self._write_key(key, self._key_code(key), 1)
+            key_code = self._key_code(key)
+            if key_code < 0:
+                return
+            self._write_key(key, key_code, 1)
             self.held[key] = True
 
     def _release(self, key: str) -> None:
         if self.held[key]:
-            self._write_key(key, self._key_code(key), 0)
+            key_code = self._key_code(key)
+            if key_code < 0:
+                return
+            self._write_key(key, key_code, 0)
             self.held[key] = False
 
     def _pulse(self, key: str, duration_ms: Optional[float] = None) -> None:
@@ -669,6 +699,17 @@ class MouseToWasd:
 
     def _key_code(self, key: str) -> int:
         key_name = self._normalize_key_name(key)
+
+        if ecodes is None:
+            key_value = self._controller_key_value(key_name)
+            if key_value is not None:
+                # Controller backends (x11/pynput) do not need a numeric keycode.
+                return 0
+            self.log(
+                f"[mouse2wasd] Unknown key '{key}'. Supported: {', '.join(self._supported_key_names())}"
+            )
+            return -1
+
         if self.backend == "x11" and self.display is not None and XK is not None:
             x11_aliases = {
                 "esc": "Escape",
@@ -846,6 +887,7 @@ class MouseToWasd:
                 self.key_listener.stop()
             except Exception:
                 pass
+        self.pynput_kbd = None
         if self.display is not None:
             try:
                 self.display.close()
